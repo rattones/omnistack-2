@@ -9,10 +9,10 @@ module.exports = {
         const booking = await Booking.create({
             user: user_id,
             spot: spot_id,
-            date
+            date,
         })
 
-	await Booking.populate('spot').populate('user').execPopulate()
+        await booking.populate('user').populate('spot').execPopulate()
 
         return res.json( booking )
     }

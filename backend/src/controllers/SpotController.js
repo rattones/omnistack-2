@@ -21,13 +21,25 @@ module.exports= {
             return res.status(400).json({ error: 'User does not exists'})
         }
 
-        const spot = await Spot.create({
-            user: user_id,
-            thumbnail: filename,
-            company,
-            techs: techs.split(',').map( tech => tech.trim() ),
-            price
-        })
+        let spot = await Spot.findOne({ company })
+
+        if (!spot) {   
+            spot = await Spot.create({
+                user: user_id,
+                thumbnail: filename,
+                company,
+                techs: techs.split(',').map( tech => tech.trim() ),
+                price
+            })
+        } else {
+            spot = await Spot.findByIdAndUpdate( spot._id, {
+                user: user_id,
+                thumbnail: filename,
+                company,
+                techs: techs.split(',').map(tech => tech.trim()),
+                price
+            })
+        }
 
         return res.json( spot )
     }
